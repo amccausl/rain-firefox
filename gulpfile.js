@@ -14,7 +14,7 @@ var sh        = require('shelljs');
 
 var paths = {
   gulp: ['./gulpfile.js'],
-  js  : ['./src/app/*.js', './src/components/**/*.js'],
+  js  : ['./src/app/*.js', './src/common/**/*.js'],
   sass: ['./src/styles/**/*.sass', './src/styles/**/*.scss'],
   jade: ['./src/app/**/*.jade'],
   html: ['./www/templates/*.html'],
