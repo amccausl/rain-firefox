@@ -18,10 +18,11 @@ var paths = {
   sass: ['./src/styles/**/*.sass', './src/styles/**/*.scss'],
   jade: ['./src/app/**/*.jade'],
   html: ['./www/templates/*.html'],
-  libs_js: ['./www/lib/ionic/js/ionic.bundle.js']
+  libs_js: ['./vendor/ionic/js/ionic.bundle.js'],
+  fonts: ['./vendor/ionic/fonts/*'],
 };
 
-gulp.task('default', ['connect', 'lint', 'app-templates', 'app-scripts', 'app-styles', 'lib-scripts', 'watch']);
+gulp.task('default', ['connect', 'lint', 'app-templates', 'app-scripts', 'app-styles', 'app-fonts', 'lib-scripts', 'watch']);
 
 gulp.task('connect', function() {
   connect.server({
@@ -70,6 +71,12 @@ gulp.task('app-styles', function() {
     }))
     .pipe( rename({ extname: '.min.css' }) )
     .pipe( gulp.dest('./www/css/') )
+    .pipe( connect.reload() );
+});
+
+gulp.task('app-fonts', function() {
+  return gulp.src( paths.fonts )
+    .pipe( gulp.dest('./www/fonts/') )
     .pipe( connect.reload() );
 });
 
