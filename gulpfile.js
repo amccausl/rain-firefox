@@ -14,7 +14,7 @@ var sh        = require('shelljs');
 
 var paths = {
   gulp: ['./gulpfile.js'],
-  js  : ['./src/app/*.js'],
+  js  : ['./src/app/*.js', './src/components/**/*.js'],
   sass: ['./src/styles/**/*.sass', './src/styles/**/*.scss'],
   jade: ['./src/app/**/*.jade'],
   html: ['./www/templates/*.html'],
@@ -77,8 +77,6 @@ gulp.task('watch', function () {
   gulp.watch( paths.js, ['lint', 'app-scripts'] );
   gulp.watch( paths.sass, ['sass'] );
   gulp.watch( paths.jade, ['jade'] );
-
-  gulp.watch(['./www/*.html'], ['html']);
 });
 
 gulp.task('install', ['git-check'], function() {
