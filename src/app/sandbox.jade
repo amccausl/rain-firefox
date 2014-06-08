@@ -1,0 +1,38 @@
+//- This file is used to bootstrap sandboxed iframe code execution
+doctype html
+html
+  head
+    title
+
+    script( type='text/javascript' ).
+
+      var initializer = function( event ) {
+        // Save references to the initializing window
+        var parent_window = event.source;
+        var parent_origin = event.origin;
+
+        // @todo should eval code in the event to start the service
+
+        // Attach listener for subsequent events
+        window.addEventListener('message', function( event ) {
+          // Validate the origin of the message
+          if( event.source !== parent_window || event.origin !== parent_origin ) {
+            return;
+          }
+
+          console.info('child event', event.origin, event);
+          parent_window.postMessage( event.data, event.origin );
+        });
+
+        // Let the parent know we are ready
+        // @todo should return information about the stream
+        parent_window.postMessage( 'ready', event.origin );
+
+        // Remove the initializer once complete
+        window.removeEventListener( 'message', initializer );
+      };
+
+      // Attach listener to the initializer from the parent
+      window.addEventListener( 'message', initializer );
+
+  body

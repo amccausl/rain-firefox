@@ -75,8 +75,8 @@ gulp.task('app-styles', function() {
 
 gulp.task('watch', function () {
   gulp.watch( paths.js, ['lint', 'app-scripts'] );
-  gulp.watch( paths.sass, ['sass'] );
-  gulp.watch( paths.jade, ['jade'] );
+  gulp.watch( paths.sass, ['app-styles'] );
+  gulp.watch( paths.jade, ['app-templates'] );
 });
 
 gulp.task('install', ['git-check'], function() {

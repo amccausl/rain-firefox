@@ -1,3 +1,6 @@
+/**
+ * Wrap foreign stream code in an iframe sandbox.
+ */
 angular.module( 'sandboxService', [
 ])
 
@@ -6,10 +9,11 @@ angular.module( 'sandboxService', [
     create: function( name, content ) {
       console.info('create', arguments);
       // Create a iframe
-      var sandbox = document.createElement('iframe');
-      // @todo find way to avoid 'allow-same-origin'
-      sandbox.sandbox = 'allow-same-origin allow-scripts';
-      sandbox.src = 'about:blank';
+      var iframe = document.createElement('iframe');
+
+      /* Safe container approach, works but requires 'allow-same-origin'.  Kinda defeats the purpose, but here for reference
+      iframe.sandbox = 'allow-same-origin allow-scripts';
+      iframe.src = 'about:blank';
 
       var script = function() {
         var listener = function( event ) {
@@ -24,29 +28,41 @@ angular.module( 'sandboxService', [
       content = '<!doctype html><head></head><body><script>(' + script + ')()</script></body></html>';
 
       // Need to wait for contentWindow to load
-      sandbox.onload = function() {
-        sandbox.contentWindow.document.open('text/html', 'replace');
-        sandbox.contentWindow.document.write( content );
-        sandbox.contentWindow.document.close();
+      iframe.onload = function() {
+        iframe.contentWindow.document.open('text/html', 'replace');
+        iframe.contentWindow.document.write( content );
+        iframe.contentWindow.document.close();
       };
+      */
+
+      iframe.sandbox = 'allow-scripts';
+      iframe.src = '/sandbox.html';
 
       window.addEventListener('message', function( event ) {
-        console.info('parent event', name, event);
-        if( event.origin === "null" && event.source == sandbox.contentWindow ) {
-          console.info('event', name, event);
+        if( event.origin === "null" && event.source == iframe.contentWindow ) {
+          console.info( 'event', name, event );
         }
       });
 
-      // @todo sandbox.contentWindow.postMessage('test', '*');
+      // Need to wait for contentWindow to load, then initialize stream
+      iframe.onload = function() {
+        // @todo Send code?
+        iframe.contentWindow.postMessage('init', '*');
+      };
+
+      // Load the sandbox into the DOM to start execution
+      document.body.appendChild( iframe );
 
       var i = 0;
       setInterval( function() {
         i++;
-        sandbox.contentWindow.postMessage('test ' + i, '*');
+        iframe.contentWindow.postMessage('test ' + i, '*');
       }, 6000);
 
-      // Load the sandbox into the DOM
-      document.body.appendChild( sandbox );
+      // @todo Load sandbox as a stream, present stream API
+      stream = {};
+
+      return stream;
     }
   };
 
