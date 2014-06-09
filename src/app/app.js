@@ -1,5 +1,10 @@
 
-angular.module('rain', ['ionic', 'rain.controllers', 'rain.services'])
+angular.module('rain', [
+  'rain.controllers',
+  'rain.services',
+
+  'ionic'
+])
 
 .run( function( $ionicPlatform ) {
   $ionicPlatform.ready( function() {
@@ -25,9 +30,9 @@ angular.module('rain', ['ionic', 'rain.controllers', 'rain.services'])
 
     // setup an abstract state for the tabs directive
     .state('tab', {
-      url: "/tab",
+      url: '',
       abstract: true,
-      templateUrl: "templates/tabs.html"
+      templateUrl: 'tabs/tabs.tpl.html'
     })
 
     // Each tab has its own nav history stack:
@@ -36,7 +41,7 @@ angular.module('rain', ['ionic', 'rain.controllers', 'rain.services'])
       url: '/dash',
       views: {
         'tab-dash': {
-          templateUrl: 'templates/tab-dash.html',
+          templateUrl: 'tabs/index/index.tpl.html',
           controller: 'DashCtrl'
         }
       }
@@ -46,7 +51,7 @@ angular.module('rain', ['ionic', 'rain.controllers', 'rain.services'])
       url: '/friends',
       views: {
         'tab-friends': {
-          templateUrl: 'templates/tab-friends.html',
+          templateUrl: 'tabs/friends/friends.tpl.html',
           controller: 'FriendsCtrl'
         }
       }
@@ -56,7 +61,7 @@ angular.module('rain', ['ionic', 'rain.controllers', 'rain.services'])
       url: '/friend/:friendId',
       views: {
         'tab-friends': {
-          templateUrl: 'templates/friend-detail.html',
+          templateUrl: 'tabs/friends/detail/detail.tpl.html',
           controller: 'FriendDetailCtrl'
         }
       }
@@ -66,7 +71,7 @@ angular.module('rain', ['ionic', 'rain.controllers', 'rain.services'])
       url: '/account',
       views: {
         'tab-account': {
-          templateUrl: 'templates/tab-account.html',
+          templateUrl: 'tabs/account/account.tpl.html',
           controller: 'AccountCtrl'
         }
       }
@@ -74,7 +79,7 @@ angular.module('rain', ['ionic', 'rain.controllers', 'rain.services'])
     ;
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+  $urlRouterProvider.otherwise('/dash');
 
 });
 
