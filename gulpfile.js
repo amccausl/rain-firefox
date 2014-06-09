@@ -10,8 +10,9 @@ var jshint    = require('gulp-jshint');
 var minifyCss = require('gulp-minify-css');
 var rename    = require('gulp-rename');
 var sass      = require('gulp-sass');
-var sh        = require('shelljs');
 var size      = require('gulp-size');
+var sh        = require('shelljs');
+var spawn     = require('child_process').spawn;
 
 var paths = {
   gulp: ['./gulpfile.js'],
@@ -92,6 +93,23 @@ gulp.task('watch', function () {
   gulp.watch( paths.js, ['lint', 'app-scripts'] );
   gulp.watch( paths.sass, ['app-styles'] );
   gulp.watch( paths.jade, ['app-templates'] );
+});
+
+// http://stackoverflow.com/questions/22886682/how-can-gulp-be-restarted-on-gulpfile-change
+gulp.task('reload', function() {
+  var process;
+  var spawnChildren = function() {
+    // kill previous spawned process
+    if( process ) {
+      process.kill();
+    }
+
+    // `spawn` a child `gulp` process linked to the parent `stdio`
+    process = spawn( 'gulp', [], { stdio: 'inherit' } );
+  };
+
+  gulp.watch( 'gulpfile.js', spawnChildren );
+  spawnChildren();
 });
 
 gulp.task('install', ['git-check'], function() {
