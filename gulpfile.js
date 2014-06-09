@@ -11,10 +11,11 @@ var minifyCss = require('gulp-minify-css');
 var rename    = require('gulp-rename');
 var sass      = require('gulp-sass');
 var sh        = require('shelljs');
+var size      = require('gulp-size');
 
 var paths = {
   gulp: ['./gulpfile.js'],
-  js  : ['./src/app/*.js', './src/common/**/*.js'],
+  js  : ['./src/app/*.js', './src/app/**/*.js', './src/common/**/*.js'],
   sass: ['./src/styles/**/*.sass', './src/styles/**/*.scss'],
   jade: ['./src/app/**/*.jade'],
   html: ['./www/templates/*.html'],
@@ -51,6 +52,8 @@ gulp.task('app-templates', function() {
 gulp.task('app-scripts', function() {
   return gulp.src( paths.js )
     .pipe( concat('app.js') )
+    .pipe( size( { showFiles: true } ) )
+    .pipe( size( { showFiles: true, gzip: true } ) )
     .pipe( gulp.dest('./www/js/') )
     .pipe( connect.reload() );
 });
@@ -58,6 +61,8 @@ gulp.task('app-scripts', function() {
 gulp.task('lib-scripts', function() {
   return gulp.src( paths.libs_js )
     .pipe( concat('libs.js') )
+    .pipe( size( { showFiles: true } ) )
+    .pipe( size( { showFiles: true, gzip: true } ) )
     .pipe( gulp.dest('./www/js/') )
     .pipe( connect.reload() );
 });
@@ -66,10 +71,13 @@ gulp.task('app-styles', function() {
   return gulp.src('./src/styles/ionic.app.scss')
     .pipe( sass() )
     .pipe( gulp.dest('./www/css/') )
+    .pipe( size( { showFiles: true } ) )
     .pipe( minifyCss({
       keepSpecialComments: 0,
     }))
     .pipe( rename({ extname: '.min.css' }) )
+    .pipe( size( { showFiles: true } ) )
+    .pipe( size( { showFiles: true, gzip: true } ) )
     .pipe( gulp.dest('./www/css/') )
     .pipe( connect.reload() );
 });
