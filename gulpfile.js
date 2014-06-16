@@ -52,7 +52,7 @@ gulp.task('app-templates', function() {
     .pipe( gulp.dest('./www/') )
     .pipe( html2js({
         moduleName: 'rain.templates',
-        prefix: '/',
+        prefix: '',
     }))
     .pipe( concat('templates.js' ) )
     .pipe( gulp.dest( './www/js' ) )
