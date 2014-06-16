@@ -2,9 +2,11 @@ var _ = require('underscore');
 
 var gulp      = require('gulp');
 var gutil     = require('gulp-util');
+
 var bower     = require('bower');
 var concat    = require('gulp-concat');
 var connect   = require('gulp-connect');
+var html2js   = require('gulp-ng-html2js');
 var jade      = require('gulp-jade');
 var jshint    = require('gulp-jshint');
 var minifyCss = require('gulp-minify-css');
@@ -13,6 +15,7 @@ var sass      = require('gulp-sass');
 var size      = require('gulp-size');
 var sh        = require('shelljs');
 var spawn     = require('child_process').spawn;
+var uglify    = require('gulp-uglifyjs');
 
 var paths = {
   gulp: ['./gulpfile.js'],
@@ -47,7 +50,18 @@ gulp.task('app-templates', function() {
       pretty: true,
     }))
     .pipe( gulp.dest('./www/') )
-    .pipe( connect.reload() );
+    .pipe( html2js({
+        moduleName: 'rain.templates',
+        prefix: '/',
+    }))
+    .pipe( concat('templates.js' ) )
+    .pipe( gulp.dest( './www/js' ) )
+    .pipe( uglify( 'templates.min.js', {
+      outSourceMap: true,
+    }))
+    .pipe( gulp.dest('./www/js') )
+    .pipe( connect.reload() )
+    ;
 });
 
 gulp.task('app-scripts', function() {
@@ -110,6 +124,12 @@ gulp.task('reload', function() {
 
   gulp.watch( 'gulpfile.js', spawnChildren );
   spawnChildren();
+});
+
+gulp.task('firefox', function() {
+  return gulp.src( './www/**/*.*' )
+    .pipe( gulp.dest('./platforms/firefox-os') )
+    ;
 });
 
 gulp.task('install', ['git-check'], function() {
