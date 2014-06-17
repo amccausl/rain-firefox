@@ -27,7 +27,7 @@ var paths = {
   fonts: ['./vendor/ionic/fonts/*'],
 };
 
-gulp.task('default', ['connect', 'lint', 'app-templates', 'app-scripts', 'app-styles', 'app-fonts', 'lib-scripts', 'watch']);
+gulp.task('default', ['connect', 'lint', 'app-templates', 'app-scripts', 'app-styles', 'app-fonts', 'lib-scripts', 'assets', 'watch']);
 
 gulp.task('connect', function() {
   connect.server({
@@ -101,6 +101,12 @@ gulp.task('app-fonts', function() {
   return gulp.src( paths.fonts )
     .pipe( gulp.dest('./www/fonts/') )
     .pipe( connect.reload() );
+});
+
+gulp.task('assets', function() {
+  return gulp.src( './src/assets/**/*' )
+    .pipe( gulp.dest('./www/assets') )
+    ;
 });
 
 gulp.task('watch', function () {
